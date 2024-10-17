@@ -14,13 +14,169 @@ model Race {
   id        String   @id @default(uuid())
   name      String   @unique
   desc      String
-  Type      raceType @default(RACE)
+  Type      raceType @default(HUMAN)
   playable  Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Weapons {
+  id          String          @id @default(uuid())
+  name        String
+  desc        String
+  enchantment Int?
+  type        weaponType      @default(DAGGER)
+  architype   weaponArchitype @default(SIMPLE)
+  twohanded   Boolean         @default(false)
+  versatile   Boolean         @default(true)
+  range       Int
+}
+
 enum raceType {
-  RACE
-  SUBRACE
+  HUMAN
+  ELF
+  DROW
+  HALFELF
+  HALFORC
+  HALFLING
+  DWARF
+  GNOME
+  TIEFLING
+  GITHYANKI
+  DRAGONBORN
+  AASIMAR
+  ADAMANTINEGOLEM
+  ELEMENTAL
+  ALIORAMUS
+  ANIMATEDARMOUR
+  ARCANETURRET
+  AUTOMATON
+  AZER
+  BATTLEAXEBEAR
+  BIRD
+  BLIGHT
+  BLINKDOG
+  BUGBEAR
+  BULETTE
+  CAMBION
+  CAT
+  CLOAKER
+  COUNTERMEASURE
+  CRAB
+  CRAWLINGCLAW
+  DARKJUSTICIAR
+  DEATHKNIGHT
+  DEATHSHEPARD
+  DEEPROTHE
+  DEVA
+  DISPLACERBEAST
+  DJINNI
+  DOG
+  DOPPLEGANGER
+  DRIDER
+  DRYAD
+  ETTERCAP
+  FETIDOOZE
+  FLESHGOLEM
+  FROG
+  GHAST
+  GHOST
+  GHOUL
+  GIANTEAGLE
+  GILDEDIMP
+  GITHZERAI
+  GNOLL
+  GOBLIN
+  GREASEBALL
+  GREMISHKA
+  GRIMVISAGE
+  HAG
+  HARPY
+  HELLSBOAR
+  HOBGOBLIN
+  HOLLYPHANT
+  HOOKHORROR
+  HYENA
+  IMP
+  INCUBUS
+  INTELLECTDEVOURER
+  KOBOLD
+  KUOTOA
+  MEAZEL
+  MEENLOCK
+  MEPHIT
+  MERREGON
+  MIMIC
+  MINDFLAYER
+  MINOTAUR
+  MOONLIGHTSILVER
+  MYCONID
+  MUMMY
+  MYRMIDON
+  OCHREJELLY
+  OGRE
+  OWLBEA
+  PHANTASM
+  PIXIE
+  POLTERGEIST
+  RAT
+  DRAGON
+  REDCAP
+  SAHUAGIN
+  SCRYINGEYE
+  SHADARKAI
+  SHADOW
+  SKELETON
+  SPECTATOR
+  SPECTURALFLUMPH
+  SPIDER
+  SQUIRREL
+  STEELWATCHER
+  SUCCUBUS
+  WEREWOLF
+  WINGEDHORROR
+  WOLF
+  WOODWOAD
+  WORK
+  WRAITH
+  ZOMBIE
+}
+
+enum weaponType {
+  FLAIL
+  MORNINGSTAR
+  RAPIER
+  SCHIMITAR
+  SHORTSWORD
+  WARPICK
+  BATTLEAXE
+  LONGSWORD
+  TRIDENT
+  WARHAMMER
+  GLAIVE
+  GREATAXE
+  GREATSWORD
+  HALBERD
+  MAUL
+  PIKE
+  HANDCROSSBOW
+  HEAVYCROSSBOW
+  LONGBOW
+  CLUB
+  DAGGER
+  HANDAXE
+  JAVELIN
+  LIGHTHAMMER
+  MACE
+  SICKLE
+  QUARTERSTAFF
+  SPEAR
+  GREATCLUB
+  LIGHTCROSSBOW
+  SHORTBOW
+}
+
+enum weaponArchitype {
+  MARTIAL
+  SIMPLE
 }

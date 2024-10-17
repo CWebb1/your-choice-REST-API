@@ -1,0 +1,22 @@
+{
+  "name": "your-choice-rest-api",
+  "version": "1.0.0",
+  "description": "My choice of REST-API for the intro to app dev project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.16.2",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "prisma": "^4.16.2"
+  }
+}

@@ -20,7 +20,7 @@ model Race {
   updatedAt DateTime @updatedAt
 }
 
-model Weapons {
+model Weapon {
   id          String          @id @default(uuid())
   name        String
   desc        String

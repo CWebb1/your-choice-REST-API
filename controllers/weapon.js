@@ -8,31 +8,36 @@ const prisma = new PrismaClient();
 const createWeapon = async (req, res) => {
     // Try/catch blocks are used to handle exceptions
     try {
-      // Create a new Race
-      await prisma.race.create({
+      // Create a new Weapon
+      await prisma.weapon.create({
         // Data to be inserted
         data: {
             name: req.body.name,
             desc: req.body.desc,
+            enchantment: req.body.enchantment,
             type: req.body.type,
-            playable: req.body.playable
+            architype: req.body.architype,
+            twoHanded: req.body.twoHanded,
+            versatile: req.body.versatile,
+            type: req.body.type,
+            range: req.body.range,
         },
       });
   
-      // Get all Races from the Race table
-      const newRaces = await prisma.race.findMany();
+      // Get all Weapons from the Weapon table
+      const newWeapon = await prisma.weapon.findMany();
   
       // Send a JSON response
       return res.status(201).json({
-        message: "Race successfully created",
-        data: newRaces,
+        message: "Weapon successfully created",
+        data: newWeapon,
       });
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
         {
           if (err.code === "P2002") {
             return res.status(409).json({
-              message: "Race with the same name already exists",
+              message: "Weapon with the same name already exists",
             });
           }
         }
@@ -45,17 +50,17 @@ const createWeapon = async (req, res) => {
 };
 
 
-const getRaces = async (req, res) => {
+const getWeapons = async (req, res) => {
     try {
-      const races = await prisma.race.findMany();
+      const weapons = await prisma.weapon.findMany();
   
-      // Check if there are no races
-      if (!races) {
-        return res.status(404).json({ message: "No races found" });
+      // Check if there are no weapons
+      if (!weapons) {
+        return res.status(404).json({ message: "No weapons found" });
       }
   
       return res.status(200).json({
-        data: races,
+        data: weapons,
       });
     } catch (err) {
       return res.status(500).json({
@@ -64,24 +69,24 @@ const getRaces = async (req, res) => {
     }
 };
 
-// Add this code under the getRaces function
-const getRace = async (req, res) => {
+// Add this code under the getWeapon function
+const getWeapon = async (req, res) => {
     try {
-      const race = await prisma.race.findUnique({
+      const weapon = await prisma.weapon.findUnique({
         where: { id: req.params.id },
       });
   
-      // Check if there is no race
-      if (!race) {
+      // Check if there is no weapon
+      if (!weapon) {
         return res
           .status(404)
           .json({
-            message: `No race with the id: ${req.params.id} found`,
+            message: `No weapon with the id: ${req.params.id} found`,
           });
       }
   
       return res.status(200).json({
-        data: race,
+        data: weapon,
       });
     } catch (err) {
       return res.status(500).json({
@@ -91,43 +96,47 @@ const getRace = async (req, res) => {
 };
 
 // Add this code under the getRace function
-const updateRace = async (req, res) => {
+const updateWeapon = async (req, res) => {
     try {
-      // Find the race by id
-      let race = await prisma.race.findUnique({
+      // Find the weapon by id
+      let weapon = await prisma.weapon.findUnique({
         where: { id: req.params.id },
       });
   
-      // Check if there is no race
-      if (!race) {
+      // Check if there is no weapon
+      if (!weapon) {
         return res
           .status(404)
           .json({
-            message: `No race with the id: ${req.params.id} found`,
+            message: `No weapon with the id: ${req.params.id} found`,
           });
       }
   
-      // Update the race
-      race = await prisma.race.update({
+      // Update the weapon
+      weapon = await prisma.weapon.update({
         where: { id: req.params.id },
         data: {
-          // Data to be updated
-            name: req.body.name,
-            desc: req.body.desc,
-            type: req.body.type,
-            playable: req.body.playable
+          name: req.body.name,
+          desc: req.body.desc,
+          enchantment: req.body.enchantment,
+          type: req.body.type,
+          architype: req.body.architype,
+          twoHanded: req.body.twoHanded,
+          versatile: req.body.versatile,
+          type: req.body.type,
+          range: req.body.range,
         },
       });
   
       return res.status(200).json({
-        message: `Race with the id: ${req.params.id} successfully updated`,
-        data: race,
+        message: `Weapon with the id: ${req.params.id} successfully updated`,
+        data: weapon,
       });
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
         if (err.code === "P2002") {
           return res.status(409).json({
-            message: "Race with the same name already exists",
+            message: "Weapon with the same name already exists",
           });
         }
       } else {
@@ -139,26 +148,26 @@ const updateRace = async (req, res) => {
 };
 
 // Add this code under the updateInstitution function
-const deleteRace = async (req, res) => {
+const deleteWeapon = async (req, res) => {
     try {
-      const race = await prisma.race.findUnique({
+      const weapon = await prisma.weapon.findUnique({
         where: { id: req.params.id },
       });
   
-      if (!race) {
+      if (!weapon) {
         return res
           .status(404)
           .json({
-            message: `No race with the id: ${req.params.id} found`,
+            message: `No weapon with the id: ${req.params.id} found`,
           });
       }
   
-      await prisma.race.delete({
+      await prisma.weapon.delete({
         where: { id: req.params.id },
       });
   
       return res.json({
-        message: `Race with the id: ${req.params.id} successfully deleted`,
+        message: `weapon with the id: ${req.params.id} successfully deleted`,
       });
     } catch (err) {
       return res.status(500).json({

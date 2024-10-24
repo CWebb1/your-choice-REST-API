@@ -32,6 +32,42 @@ model Weapon {
   range       Int
 }
 
+model PlayerStats {
+  id           String     @id @default(uuid())
+  name         String
+  level        Int
+  strength     Int
+  dexterity    Int
+  constitution Int
+  wisdom       Int
+  intelligence Int
+  charisma     Int
+  class        Classes    @relation(fields: [classId], references: [id])
+  classId      String
+  subclass     Subclasses @relation(fields: [subclassId], references: [id])
+  subclassId   String
+}
+
+model Classes {
+  id          String        @id @default(uuid())
+  classname   String        @unique
+  desc        String
+  health      Int
+  features    String[]
+  subclasses  Subclasses[]
+  PlayerStats PlayerStats[]
+}
+
+model Subclasses {
+  id           String        @id @default(uuid())
+  subclassname String        @unique
+  desc         String
+  features     String[]
+  class        Classes       @relation(fields: [classId], references: [id])
+  classId      String        @unique
+  PlayerStats  PlayerStats[]
+}
+
 enum raceType {
   HUMAN
   ELF

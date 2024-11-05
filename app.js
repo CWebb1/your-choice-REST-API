@@ -1,10 +1,12 @@
 import express from "express";
-import indexRoutes from "./routes/index.js";
-import raceRoutes from "./routes/race.js";
-import weaponRoutes from "./routes/weapon.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import cors from 'cors';
+
+//importing Routes
+import characterRoute from "./routes/v1/characterRoute.js";
+import inventoryRoute from "./routes/v1/inventoryRoute.js";
+import equipmentRoute from "./routes/v1/equipmentRoute.js"
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,15 +38,14 @@ const swaggerOptions = {
       }
     ],
   },
-  apis: ["./src/routes/*.js", "./routes/*.js"], // Add both potential paths
+  apis: ["./src/routes/v1/*.js", "./routes/v1/*.js"], // Add both potential paths
 };
 
 // Create Swagger specification
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 // Serve Swagger documentation
-app.use("/api-docs", swaggerUi.serve);
-app.get("/api-docs", swaggerUi.setup(swaggerSpec, { explorer: true }));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -52,9 +53,10 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
-app.use("/", indexRoutes);
-app.use("/api/races", raceRoutes);
-app.use("/api/weapons", weaponRoutes);
+app.use("/api/v1/characters", characterRoute);
+app.use("/api/v1/inventory", inventoryRoute);
+app.use("/api/v1/equipment", equipmentRoute);
+
 
 // Error handling
 app.use((err, req, res, next) => {

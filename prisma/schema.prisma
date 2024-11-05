@@ -11,13 +11,84 @@ datasource db {
 }
 
 model Race {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  desc      String
-  type      raceType @default(HUMAN)
-  playable  Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String      @id @default(uuid())
+  name       String      @unique
+  desc       String
+  type       raceType    @default(HUMAN)
+  playable   Boolean
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  characters Character[]
+  // Race traits
+  speed      Int         @default(30)
+  darkvision Boolean     @default(false)
+  size       Size        @default(MEDIUM)
+}
+
+model Class {
+  id             String      @id @default(uuid())
+  name           String      @unique
+  desc           String
+  hitDie         Int // e.g., 8 for d8, 12 for d12
+  primaryAbility Ability
+  savingThrows   Ability[]
+  characters     Character[]
+  spellcasting   Boolean     @default(false)
+  subclasses     Subclass[]
+}
+
+model Subclass {
+  id         String      @id @default(uuid())
+  name       String
+  desc       String
+  class      Class       @relation(fields: [classId], references: [id])
+  classId    String
+  characters Character[]
+}
+
+model Character {
+  id            String     @id @default(uuid())
+  name          String
+  level         Int        @default(1)
+  experience    Int        @default(0)
+  // Relations
+  race          Race       @relation(fields: [raceId], references: [id])
+  raceId        String
+  class         Class      @relation(fields: [classId], references: [id])
+  classId       String
+  subclass      Subclass?  @relation(fields: [subclassId], references: [id])
+  subclassId    String?
+  // Stats
+  strength      Int        @default(10)
+  dexterity     Int        @default(10)
+  constitution  Int        @default(10)
+  intelligence  Int        @default(10)
+  wisdom        Int        @default(10)
+  charisma      Int        @default(10)
+  // Equipment
+  inventory     Inventory?
+  equipment     Equipment?
+  learnedSpells String
+  spells        Spell      @relation(fields: [learnedSpells], references: [id])
+}
+
+model Equipment {
+  id            String    @id @default(uuid())
+  character     Character @relation(fields: [characterId], references: [id])
+  characterId   String    @unique
+  equipedWeapon String
+  weapon        Weapon    @relation(fields: [equipedWeapon], references: [id])
+  armor         Armor?
+}
+
+model Inventory {
+  id          String    @id @default(uuid())
+  character   Character @relation(fields: [characterId], references: [id])
+  characterId String    @unique
+  gold        Int       @default(0)
+  weaponlist  String //FK
+  items       Item[]
+  weapon      Weapon    @relation(fields: [weaponlist], references: [id])
 }
 
 model Weapon {
@@ -30,42 +101,44 @@ model Weapon {
   twohanded   Boolean         @default(false)
   versatile   Boolean         @default(true)
   range       Int
+  damage      String // e.g., "1d8"
+  damageType  DamageType
+  equipment   Equipment[]
+  inventory   Inventory[]
 }
 
-model PlayerStats {
-  id           String     @id @default(uuid())
-  name         String
-  level        Int
-  strength     Int
-  dexterity    Int
-  constitution Int
-  wisdom       Int
-  intelligence Int
-  charisma     Int
-  class        Classes    @relation(fields: [classId], references: [id])
-  classId      String
-  subclass     Subclasses @relation(fields: [subclassId], references: [id])
-  subclassId   String
-}
-
-model Classes {
-  id          String        @id @default(uuid())
-  classname   String        @unique
+model Armor {
+  id          String    @id @default(uuid())
+  name        String
   desc        String
-  health      Int
-  features    String[]
-  subclasses  Subclasses[]
-  PlayerStats PlayerStats[]
+  type        ArmorType
+  baseAC      Int
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  equipmentId String    @unique
 }
 
-model Subclasses {
-  id           String        @id @default(uuid())
-  subclassname String        @unique
-  desc         String
-  features     String[]
-  class        Classes       @relation(fields: [classId], references: [id])
-  classId      String        @unique
-  PlayerStats  PlayerStats[]
+model Item {
+  id          String    @id @default(uuid())
+  name        String
+  desc        String
+  weight      Float
+  value       Int // in gold pieces
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  inventoryId String
+}
+
+model Spell {
+  id            String      @id @default(uuid())
+  name          String      @unique
+  desc          String
+  level         Int // 0 for cantrips
+  school        SpellSchool
+  castingTime   String
+  range         String
+  components    String[]
+  duration      String
+  concentration Boolean     @default(false)
+  spells        Character[]
 }
 
 enum raceType {
@@ -80,6 +153,58 @@ enum raceType {
   TIEFLING
   GITHYANKI
   DRAGONBORN
+}
+
+enum Size {
+  TINY
+  SMALL
+  MEDIUM
+  LARGE
+  HUGE
+  GARGANTUAN
+}
+
+enum Ability {
+  STRENGTH
+  DEXTERITY
+  CONSTITUTION
+  INTELLIGENCE
+  WISDOM
+  CHARISMA
+}
+
+enum ArmorType {
+  LIGHT
+  MEDIUM
+  HEAVY
+  SHIELD
+}
+
+enum DamageType {
+  SLASHING
+  PIERCING
+  BLUDGEONING
+  ACID
+  COLD
+  FIRE
+  FORCE
+  LIGHTNING
+  NECROTIC
+  POISON
+  PSYCHIC
+  RADIANT
+  THUNDER
+}
+
+enum SpellSchool {
+  ABJURATION
+  CONJURATION
+  DIVINATION
+  ENCHANTMENT
+  EVOCATION
+  ILLUSION
+  NECROMANCY
+  TRANSMUTATION
 }
 
 enum weaponType {

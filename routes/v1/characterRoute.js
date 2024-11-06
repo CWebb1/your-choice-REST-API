@@ -1,11 +1,11 @@
-import express from 'express';
+import express from "express";
 import {
   createCharacter,
   getAllCharacters,
   getCharacterById,
   updateCharacter,
   deleteCharacter,
-} from '../../controllers/v1/characterController.js';
+} from "../../controllers/v1/characterController.js";
 
 const router = express.Router();
 
@@ -13,6 +13,23 @@ const router = express.Router();
  * @swagger
  * components:
  *   schemas:
+ *     CharacterSpell:
+ *       type: object
+ *       properties:
+  *        id:
+  *          type: string
+  *          format: uuid
+  *          description: Auto-generated ID for the character spell relation
+  *        characterId:
+  *          type: string
+  *          format: uuid
+  *          description: ID of the character who learned the spell
+  *        spellId:
+  *          type: string
+  *          format: uuid
+  *          description: ID of the learned spell
+ * 
+ * 
  *     EquipmentSlot:
  *       type: object
  *       required:
@@ -302,10 +319,10 @@ const router = express.Router();
  *         $ref: '#/components/responses/Character404'
  */
 // Character routes
-router.get('/', getAllCharacters);
-router.get('/:id', getCharacterById);
-router.post('/', createCharacter);
-router.put('/:id', updateCharacter);
-router.delete('/:id', deleteCharacter);
+router.get("/", getAllCharacters);
+router.get("/:id", getCharacterById);
+router.post("/", createCharacter);
+router.put("/:id", updateCharacter);
+router.delete("/:id", deleteCharacter);
 
 export default router;

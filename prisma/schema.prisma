@@ -51,34 +51,33 @@ model Character {
   name          String
   level         Int        @default(1)
   experience    Int        @default(0)
+
   // Relations
   race          Race       @relation(fields: [raceId], references: [id])
-  raceId        String
+  raceId        String     
   class         Class      @relation(fields: [classId], references: [id])
   classId       String
   subclass      Subclass?  @relation(fields: [subclassId], references: [id])
   subclassId    String?
-  // Stats
+
+  // Stats with 1-20 range enforced in application logic
   strength      Int        @default(10)
   dexterity     Int        @default(10)
   constitution  Int        @default(10)
   intelligence  Int        @default(10)
   wisdom        Int        @default(10)
   charisma      Int        @default(10)
-  // Equipment
-  inventory     Inventory?
-  equipment     Equipment?
-  learnedSpells String
-  spells        Spell      @relation(fields: [learnedSpells], references: [id])
-}
 
-model Equipment {
-  id            String    @id @default(uuid())
-  character     Character @relation(fields: [characterId], references: [id])
-  characterId   String    @unique
-  equipedWeapon String
-  weapon        Weapon    @relation(fields: [equipedWeapon], references: [id])
-  armor         Armor?
+  // Inventory and Equipment references
+  inventory     Inventory?
+  inventoryId   String?    // UUID reference to Inventory
+
+  equipment     Equipment?
+  equipmentId   String?    // UUID reference to Equipment
+
+  learnedSpells CharacterSpell[]
+
+
 }
 
 model Inventory {
@@ -86,43 +85,35 @@ model Inventory {
   character   Character @relation(fields: [characterId], references: [id])
   characterId String    @unique
   gold        Int       @default(0)
-  weaponlist  String //FK
+  capacity    Int       @default(20)  // Max number of item stacks
   items       Item[]
-  weapon      Weapon    @relation(fields: [weaponlist], references: [id])
+
+  // Since only a reference to weapon is required, no need for a direct relation to Weapon
 }
 
-model Weapon {
-  id          String          @id @default(uuid())
-  name        String
-  desc        String
-  enchantment Int?
-  type        weaponType      @default(DAGGER)
-  architype   weaponArchitype @default(SIMPLE)
-  twohanded   Boolean         @default(false)
-  versatile   Boolean         @default(true)
-  range       Int
-  damage      String // e.g., "1d8"
-  damageType  DamageType
-  equipment   Equipment[]
-  inventory   Inventory[]
+model Equipment {
+  id          String      @id @default(uuid())
+  character   Character   @relation(fields: [characterId], references: [id])
+  characterId String      @unique
+  slots       EquipmentSlot[]
+
+  // Note: Armor and Weapon are not specified as separate relations here based on Swagger requirements
 }
 
-model Armor {
-  id          String    @id @default(uuid())
-  name        String
-  desc        String
-  type        ArmorType
-  baseAC      Int
-  equipment   Equipment @relation(fields: [equipmentId], references: [id])
-  equipmentId String    @unique
+model EquipmentSlot {
+  id       String @id @default(uuid())
+  slotType SlotType
+  itemId   String // UUID reference to an item
+
+  equipment Equipment @relation(fields: [equipmentId], references: [id])
+  equipmentId String
 }
 
 model Item {
   id          String    @id @default(uuid())
   name        String
   desc        String
-  weight      Float
-  value       Int // in gold pieces
+  quantity    Int       @default(1) @db.Integer  // Number of items in the stack
   inventory   Inventory @relation(fields: [inventoryId], references: [id])
   inventoryId String
 }
@@ -131,14 +122,54 @@ model Spell {
   id            String      @id @default(uuid())
   name          String      @unique
   desc          String
-  level         Int // 0 for cantrips
+  level         Int         // 0 for cantrips
   school        SpellSchool
   castingTime   String
   range         String
   components    String[]
   duration      String
   concentration Boolean     @default(false)
-  spells        Character[]
+
+  characterSpells CharacterSpell[] // Relation with CharacterSpell
+}
+
+// Intermediate model for learned spells
+model CharacterSpell {
+  id          String     @id @default(uuid())
+  character   Character  @relation(fields: [characterId], references: [id])
+  characterId String
+  spell       Spell      @relation(fields: [spellId], references: [id])
+  spellId     String
+}
+
+model Weapon {
+  id          String    @id @default(uuid())
+  name        String
+  desc        String
+  type        weaponType
+  damage      String    // e.g., "1d8"
+  twohanded   Boolean   @default(false)
+  versatile   Boolean   @default(true)
+  range       Int?
+  architype   weaponArchitype @default(SIMPLE)
+}
+
+enum SlotType {
+  HEAD
+  NECK
+  SHOULDERS
+  CHEST
+  BACK
+  ARMS
+  HANDS
+  WAIST
+  LEGS
+  FEET
+  MAIN_HAND
+  OFF_HAND
+  TWO_HAND
+  RING_1
+  RING_2
 }
 
 enum raceType {

@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "raceType" AS ENUM ('HUMAN', 'ELF', 'DROW', 'HALFELF', 'HALFORC', 'HALFLING', 'DWARF', 'GNOME', 'TIEFLING', 'GITHYANKI', 'DRAGONBORN');
+CREATE TYPE "SlotType" AS ENUM ('HEAD', 'NECK', 'SHOULDERS', 'CHEST', 'BACK', 'ARMS', 'HANDS', 'WAIST', 'LEGS', 'FEET', 'MAIN_HAND', 'OFF_HAND', 'TWO_HAND', 'RING_1', 'RING_2');
 
 -- CreateEnum
 CREATE TYPE "Size" AS ENUM ('TINY', 'SMALL', 'MEDIUM', 'LARGE', 'HUGE', 'GARGANTUAN');
@@ -27,10 +27,7 @@ CREATE TABLE "Race" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "desc" TEXT NOT NULL,
-    "type" "raceType" NOT NULL DEFAULT 'HUMAN',
     "playable" BOOLEAN NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
     "speed" INTEGER NOT NULL DEFAULT 30,
     "darkvision" BOOLEAN NOT NULL DEFAULT false,
     "size" "Size" NOT NULL DEFAULT 'MEDIUM',
@@ -76,18 +73,10 @@ CREATE TABLE "Character" (
     "intelligence" INTEGER NOT NULL DEFAULT 10,
     "wisdom" INTEGER NOT NULL DEFAULT 10,
     "charisma" INTEGER NOT NULL DEFAULT 10,
-    "learnedSpells" TEXT NOT NULL,
+    "inventoryId" TEXT,
+    "equipmentId" TEXT,
 
     CONSTRAINT "Character_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Equipment" (
-    "id" TEXT NOT NULL,
-    "characterId" TEXT NOT NULL,
-    "equipedWeapon" TEXT NOT NULL,
-
-    CONSTRAINT "Equipment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -95,38 +84,27 @@ CREATE TABLE "Inventory" (
     "id" TEXT NOT NULL,
     "characterId" TEXT NOT NULL,
     "gold" INTEGER NOT NULL DEFAULT 0,
-    "weaponlist" TEXT NOT NULL,
+    "capacity" INTEGER NOT NULL DEFAULT 20,
 
     CONSTRAINT "Inventory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Weapon" (
+CREATE TABLE "Equipment" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "desc" TEXT NOT NULL,
-    "enchantment" INTEGER,
-    "type" "weaponType" NOT NULL DEFAULT 'DAGGER',
-    "architype" "weaponArchitype" NOT NULL DEFAULT 'SIMPLE',
-    "twohanded" BOOLEAN NOT NULL DEFAULT false,
-    "versatile" BOOLEAN NOT NULL DEFAULT true,
-    "range" INTEGER NOT NULL,
-    "damage" TEXT NOT NULL,
-    "damageType" "DamageType" NOT NULL,
+    "characterId" TEXT NOT NULL,
 
-    CONSTRAINT "Weapon_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Equipment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Armor" (
+CREATE TABLE "EquipmentSlot" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "desc" TEXT NOT NULL,
-    "type" "ArmorType" NOT NULL,
-    "baseAC" INTEGER NOT NULL,
+    "slotType" "SlotType" NOT NULL,
+    "itemId" TEXT NOT NULL,
     "equipmentId" TEXT NOT NULL,
 
-    CONSTRAINT "Armor_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "EquipmentSlot_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -134,8 +112,7 @@ CREATE TABLE "Item" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "desc" TEXT NOT NULL,
-    "weight" DOUBLE PRECISION NOT NULL,
-    "value" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL DEFAULT 1,
     "inventoryId" TEXT NOT NULL,
 
     CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
@@ -157,6 +134,30 @@ CREATE TABLE "Spell" (
     CONSTRAINT "Spell_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "CharacterSpell" (
+    "id" TEXT NOT NULL,
+    "characterId" TEXT NOT NULL,
+    "spellId" TEXT NOT NULL,
+
+    CONSTRAINT "CharacterSpell_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Weapon" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "desc" TEXT NOT NULL,
+    "type" "weaponType" NOT NULL,
+    "damage" TEXT NOT NULL,
+    "twohanded" BOOLEAN NOT NULL DEFAULT false,
+    "versatile" BOOLEAN NOT NULL DEFAULT true,
+    "range" INTEGER,
+    "architype" "weaponArchitype" NOT NULL DEFAULT 'SIMPLE',
+
+    CONSTRAINT "Weapon_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Race_name_key" ON "Race"("name");
 
@@ -164,13 +165,10 @@ CREATE UNIQUE INDEX "Race_name_key" ON "Race"("name");
 CREATE UNIQUE INDEX "Class_name_key" ON "Class"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Equipment_characterId_key" ON "Equipment"("characterId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Inventory_characterId_key" ON "Inventory"("characterId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Armor_equipmentId_key" ON "Armor"("equipmentId");
+CREATE UNIQUE INDEX "Equipment_characterId_key" ON "Equipment"("characterId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Spell_name_key" ON "Spell"("name");
@@ -188,22 +186,19 @@ ALTER TABLE "Character" ADD CONSTRAINT "Character_classId_fkey" FOREIGN KEY ("cl
 ALTER TABLE "Character" ADD CONSTRAINT "Character_subclassId_fkey" FOREIGN KEY ("subclassId") REFERENCES "Subclass"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Character" ADD CONSTRAINT "Character_learnedSpells_fkey" FOREIGN KEY ("learnedSpells") REFERENCES "Spell"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Inventory" ADD CONSTRAINT "Inventory_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Equipment" ADD CONSTRAINT "Equipment_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Equipment" ADD CONSTRAINT "Equipment_equipedWeapon_fkey" FOREIGN KEY ("equipedWeapon") REFERENCES "Weapon"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Inventory" ADD CONSTRAINT "Inventory_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Inventory" ADD CONSTRAINT "Inventory_weaponlist_fkey" FOREIGN KEY ("weaponlist") REFERENCES "Weapon"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Armor" ADD CONSTRAINT "Armor_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "Equipment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "EquipmentSlot" ADD CONSTRAINT "EquipmentSlot_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "Equipment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Item" ADD CONSTRAINT "Item_inventoryId_fkey" FOREIGN KEY ("inventoryId") REFERENCES "Inventory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CharacterSpell" ADD CONSTRAINT "CharacterSpell_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CharacterSpell" ADD CONSTRAINT "CharacterSpell_spellId_fkey" FOREIGN KEY ("spellId") REFERENCES "Spell"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -56,23 +56,50 @@ const createCharacter = async (req, res) => {
   try {
     const { name, raceId, classId, subclassId, ...stats } = req.body;
 
-    const character = await prisma.character.create({
-      data: {
-        name,
-        raceId,
-        classId,
-        subclassId,
-        ...stats,
-      },
-      include: {
-        race: true,
-        class: true,
-        subclass: true,
-      },
+    // Use a transaction to ensure all related records are created
+    const character = await prisma.$transaction(async (prisma) => {
+      // Create the character first
+      const newCharacter = await prisma.character.create({
+        data: {
+          name,
+          raceId,
+          classId,
+          subclassId,
+          ...stats,
+          // Create inventory and equipment inline
+          inventory: {
+            create: {
+              gold: 0,
+              capacity: 20
+            }
+          },
+          equipment: {
+            create: {
+              slots: [] // Initialize with no equipment slots
+            }
+          }
+        },
+        include: {
+          race: true,
+          class: true,
+          subclass: true,
+          inventory: true,
+          equipment: true
+        }
+      });
+
+      return newCharacter;
     });
 
     res.status(201).json(character);
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return res.status(400).json({ error: 'Character with this name already exists' });
+      } else if (error.code === 'P2003') {
+        return res.status(400).json({ error: 'Invalid reference ID provided' });
+      }
+    }
     res.status(400).json({ error: error.message });
   }
 };
@@ -104,14 +131,14 @@ const updateCharacter = async (req, res) => {
 
 const deleteCharacter = async (req, res) => {
   try {
+    // With cascade delete in schema, this will automatically delete inventory and equipment
     await prisma.character.delete({
       where: { id: req.params.id },
     });
 
-    res.status(200).json({ message: 'Character deleted successfully' });
+    res.status(200).json({ message: 'Character and all associated data deleted successfully' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
-
 export {createCharacter, getAllCharacters, getCharacterById, deleteCharacter, updateCharacter};

@@ -67,33 +67,35 @@ model Character {
 
   // Inventory and Equipment references
   inventory     Inventory?
-  inventoryId   String?    // UUID reference to Inventory
 
   equipment     Equipment?
   equipmentId   String?    // UUID reference to Equipment
 
   learnedSpells CharacterSpell[]
 
-
+  @@map("characters")
 }
 
 model Inventory {
   id          String    @id @default(uuid())
-  character   Character @relation(fields: [characterId], references: [id])
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
   characterId String    @unique
   gold        Int       @default(0)
   capacity    Int       @default(20)  // Max number of item stacks
   items       Item[]
+
+  @@map("inventories")
 
   // Since only a reference to weapon is required, no need for a direct relation to Weapon
 }
 
 model Equipment {
   id          String      @id @default(uuid())
-  character   Character   @relation(fields: [characterId], references: [id])
+  character   Character   @relation(fields: [characterId], references: [id], onDelete: Cascade)
   characterId String      @unique
   slots       EquipmentSlot[]
 
+  @@map("equipment")
   // Note: Armor and Weapon are not specified as separate relations here based on Swagger requirements
 }
 

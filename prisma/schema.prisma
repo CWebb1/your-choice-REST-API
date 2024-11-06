@@ -14,10 +14,7 @@ model Race {
   id         String      @id @default(uuid())
   name       String      @unique
   desc       String
-  type       raceType    @default(HUMAN)
   playable   Boolean
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
   characters Character[]
   // Race traits
   speed      Int         @default(30)
@@ -170,20 +167,6 @@ enum SlotType {
   TWO_HAND
   RING_1
   RING_2
-}
-
-enum raceType {
-  HUMAN
-  ELF
-  DROW
-  HALFELF
-  HALFORC
-  HALFLING
-  DWARF
-  GNOME
-  TIEFLING
-  GITHYANKI
-  DRAGONBORN
 }
 
 enum Size {

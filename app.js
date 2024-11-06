@@ -6,7 +6,8 @@ import cors from 'cors';
 //importing Routes
 import characterRoute from "./routes/v1/characterRoute.js";
 import inventoryRoute from "./routes/v1/inventoryRoute.js";
-import equipmentRoute from "./routes/v1/equipmentRoute.js"
+import equipmentRoute from "./routes/v1/equipmentRoute.js";
+import raceRoute from "./routes/v1/raceRoute.js"
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -56,6 +57,7 @@ app.get('/health', (req, res) => {
 app.use("/api/v1/characters", characterRoute);
 app.use("/api/v1/inventory", inventoryRoute);
 app.use("/api/v1/equipment", equipmentRoute);
+app.use("/api/v1/races", raceRoute);
 
 
 // Error handling

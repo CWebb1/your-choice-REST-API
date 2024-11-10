@@ -100,21 +100,22 @@ model Equipment {
 }
 
 model EquipmentSlot {
-  id       String @id @default(uuid())
-  slotType SlotType
-  itemId   String // UUID reference to an item
-
-  equipment Equipment @relation(fields: [equipmentId], references: [id])
+  id          String    @id @default(uuid())
+  slotType    SlotType
+  item        Item      @relation(fields: [itemId], references: [id])
+  itemId      String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
   equipmentId String
 }
 
 model Item {
-  id          String    @id @default(uuid())
+  id            String    @id @default(uuid())
   name        String
   desc        String
   quantity    Int       @default(1) @db.Integer  // Number of items in the stack
   inventory   Inventory @relation(fields: [inventoryId], references: [id])
   inventoryId String
+  equipmentSlot EquipmentSlot[]
 }
 
 model Spell {

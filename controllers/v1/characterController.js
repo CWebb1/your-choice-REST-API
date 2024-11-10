@@ -55,40 +55,43 @@ const getCharacterById = async (req, res) => {
 const createCharacter = async (req, res) => {
   try {
     const { name, raceId, classId, subclassId, ...stats } = req.body;
+    
+    // Validate ability scores
+    const abilityScores = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+    for (const score of abilityScores) {
+      if (stats[score] && (stats[score] < 1 || stats[score] > 20)) {
+        return res.status(400).json({ error: `${score} must be between 1 and 20` });
+      }
+    }
 
-    // Use a transaction to ensure all related records are created
-    const character = await prisma.$transaction(async (prisma) => {
-      // Create the character first
-      const newCharacter = await prisma.character.create({
-        data: {
-          name,
-          raceId,
-          classId,
-          subclassId,
-          ...stats,
-          // Create inventory and equipment inline
-          inventory: {
-            create: {
-              gold: 0,
-              capacity: 20
-            }
-          },
-          equipment: {
-            create: {
-              slots: [] // Initialize with no equipment slots
-            }
+    const character = await prisma.character.create({
+      data: {
+        name,
+        raceId,
+        classId,
+        subclassId,
+        ...stats,
+        inventory: {
+          create: {
+            gold: 0,
+            capacity: 20
           }
         },
-        include: {
-          race: true,
-          class: true,
-          subclass: true,
-          inventory: true,
-          equipment: true
+        equipment: {
+          create: {
+            slots: {
+              create: []
+            }
+          }
         }
-      });
-
-      return newCharacter;
+      },
+      include: {
+        race: true,
+        class: true,
+        subclass: true,
+        inventory: true,
+        equipment: true
+      }
     });
 
     res.status(201).json(character);

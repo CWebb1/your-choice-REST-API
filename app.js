@@ -56,6 +56,8 @@ app.get('/health', (req, res) => {
 
 // Routes
 app.use("/api/v1/characters", characterRoute);
+app.use("/api/v1/inventory", inventoryRoute);
+app.use("/api/v1/equipment", equipmentRoute);
 app.use("/api/v1/races", raceRoute);
 app.use("/api/v1/classes", classRoute);
 

@@ -113,5 +113,5 @@ npm run format
 Below are the Entity Relationship Diagrams (ERDs) for the REST APIs:
 
 ```bash
-![ERD](prisma-erd.svg)
+![ERD](./prisma-erd.svg)
 ```

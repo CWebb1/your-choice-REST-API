@@ -11,7 +11,8 @@
     "prisma:studio": "npx prisma studio",
     "prisma:seed": "npm run prisma:reset && node prisma/seed/index.js",
     "format": "prettier --write .",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "mocha:test": "mocha tests/**/*.test.js --exit"
   },
   "type": "module",
   "keywords": [],
@@ -31,6 +32,9 @@
     "prisma": "^5.22.0",
     "prisma-erd-generator": "^1.11.2",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0"
   }
 }

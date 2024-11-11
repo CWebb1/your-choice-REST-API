@@ -9,6 +9,7 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:reset": "npx prisma migrate reset --force",
     "prisma:studio": "npx prisma studio",
+    "prisma:seed": "npm run prisma:reset && node prisma/seed/index.js",
     "format": "prettier --write .",
     "lint": "eslint . --fix"
   },

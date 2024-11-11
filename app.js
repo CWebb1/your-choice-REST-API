@@ -9,7 +9,9 @@ import inventoryRoute from "./routes/v1/inventoryRoute.js";
 import equipmentRoute from "./routes/v1/equipmentRoute.js";
 import raceRoute from "./routes/v1/raceRoute.js";
 import classRoute from "./routes/v1/classRoute.js";
-
+import spellRoute from "./routes/v1/spellRoute.js";
+import learnedspellRoute from "./routes/v1/learnedspellRoute.js";
+import weaponRoute from "./routes/v1/weaponRoute.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -60,6 +62,9 @@ app.use("/api/v1/inventory", inventoryRoute);
 app.use("/api/v1/equipment", equipmentRoute);
 app.use("/api/v1/races", raceRoute);
 app.use("/api/v1/classes", classRoute);
+app.use("/api/v1/spells", spellRoute);
+app.use("/api/v1/learnedspells", learnedspellRoute);
+app.use("/api/v1/weapons", weaponRoute);
 
 
 // Error handling

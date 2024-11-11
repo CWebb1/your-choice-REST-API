@@ -19,9 +19,13 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "cors": "^2.8.5",
-    "express": "^4.21.1"
+    "eslint": "^9.14.0",
+    "express": "^4.21.1",
+    "joi": "^17.13.3",
+    "prettier": "^3.3.3"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.25.9",
     "nodemon": "^3.1.7",
     "prisma": "^5.22.0",
     "prisma-erd-generator": "^1.11.2",

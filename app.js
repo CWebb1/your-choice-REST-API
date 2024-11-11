@@ -67,18 +67,23 @@ app.use("/api/v1/learnedspells", learnedspellRoute);
 app.use("/api/v1/weapons", weaponRoute);
 
 
-// Error handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    error: 'Something went wrong!',
-    message: err.message 
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    status: 404,
+    message: 'The requested resource was not found',
+    path: req.path
   });
 });
 
-// Handle 404
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+// Global error handler
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  res.status(status).json({
+    status,
+    message: err.message || 'Internal Server Error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
 });
 
 app.listen(PORT, () => {

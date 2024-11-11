@@ -1,15 +1,41 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+import { buildPrismaQuery } from "../../utils/queryHelper.js";
+import joi from "joi";
 
 const prisma = new PrismaClient();
 
+// Validation schema
+const raceSchema = joi.object({
+  name: joi.string().required(),
+  desc: joi.string().required(),
+  playable: joi.boolean(),
+  speed: joi.number().integer().min(0).max(100),
+  darkvision: joi.boolean(),
+  size: joi.string().valid('TINY', 'SMALL', 'MEDIUM', 'LARGE', 'HUGE', 'GARGANTUAN')
+});
+
 const getAllRaces = async (req, res) => {
   try {
-    const races = await prisma.race.findMany({
-      include: {
-        characters: true,
-      },
+    const query = buildPrismaQuery(req.query);
+    const [races, total] = await Promise.all([
+      prisma.race.findMany({
+        ...query,
+        include: {
+          characters: true,
+        },
+      }),
+      prisma.race.count({ where: query.where })
+    ]);
+
+    res.status(200).json({
+      data: races,
+      meta: {
+        total,
+        page: parseInt(req.query.page) || 1,
+        limit: parseInt(req.query.limit) || 25,
+        totalPages: Math.ceil(total / (parseInt(req.query.limit) || 25))
+      }
     });
-    res.status(200).json(races);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -36,17 +62,14 @@ const getRaceById = async (req, res) => {
 
 const createRace = async (req, res) => {
   try {
-    const { name, desc, playable, speed, darkvision, size } = req.body;
+    // Validate request body
+    const { error } = raceSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
 
     const race = await prisma.race.create({
-      data: {
-        name,
-        desc,
-        playable,
-        speed,
-        darkvision,
-        size,
-      },
+      data: req.body
     });
 
     res.status(201).json(race);
@@ -57,22 +80,25 @@ const createRace = async (req, res) => {
 
 const updateRace = async (req, res) => {
   try {
-    const { name, desc, playable, speed, darkvision, size } = req.body;
+    // Validate request body
+    const { error } = raceSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
 
     const race = await prisma.race.update({
       where: { id: req.params.id },
-      data: {
-        name,
-        desc,
-        playable,
-        speed,
-        darkvision,
-        size,
+      data: req.body,
+      include: {
+        characters: true,
       },
     });
 
     res.status(200).json(race);
   } catch (error) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ message: 'Race not found' });
+    }
     res.status(400).json({ error: error.message });
   }
 };
@@ -85,6 +111,9 @@ const deleteRace = async (req, res) => {
 
     res.status(200).json({ message: 'Race deleted successfully' });
   } catch (error) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ message: 'Race not found' });
+    }
     res.status(400).json({ error: error.message });
   }
 };

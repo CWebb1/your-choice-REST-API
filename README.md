@@ -25,9 +25,9 @@ cd <REPLACE WITH YOUR GITHUB REPO NAME>
 3. Set up environment variables by creating a `.env` file and filling in the required configurations:
 
 ```bash
-DATABASE_URL=
-
-ADD OTHER ENVIRONMENT VARIABLES
+DATABASE_URL="postgresql://yourchoice_api_user:dopo4ZUkrRC53yEsvkMzhPILcshvBgEn@dpg-cso7emhu0jms7393sf2g-a.oregon-postgres.render.com/yourchoice_api"
+JWT_SECRET="HelloWorld123"
+JWT_LIFETIME="1h"
 ```
 
 ## Running REST APIs Locally

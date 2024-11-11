@@ -12,6 +12,7 @@ import classRoute from "./routes/v1/classRoute.js";
 import spellRoute from "./routes/v1/spellRoute.js";
 import learnedspellRoute from "./routes/v1/learnedspellRoute.js";
 import weaponRoute from "./routes/v1/weaponRoute.js";
+import itemRoute from "./routes/v1/itemRoute.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -65,6 +66,7 @@ app.use("/api/v1/classes", classRoute);
 app.use("/api/v1/spells", spellRoute);
 app.use("/api/v1/learnedspells", learnedspellRoute);
 app.use("/api/v1/weapons", weaponRoute);
+app.use("/api/v1/items", itemRoute);
 
 
 // 404 handler

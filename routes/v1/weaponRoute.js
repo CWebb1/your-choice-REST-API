@@ -4,7 +4,7 @@ import {
   getWeaponById,
   createWeapon,
   updateWeapon,
-  deleteWeapon
+  deleteWeapon,
 } from "../../controllers/v1/weaponController.js";
 
 const router = express.Router();

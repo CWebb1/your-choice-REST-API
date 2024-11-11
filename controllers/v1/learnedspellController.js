@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -7,11 +7,11 @@ const getCharacterSpells = async (req, res) => {
     const characterId = req.params.characterId;
     const learnedSpells = await prisma.characterSpell.findMany({
       where: {
-        characterId: characterId
+        characterId: characterId,
       },
       include: {
-        spell: true
-      }
+        spell: true,
+      },
     });
 
     res.status(200).json(learnedSpells);
@@ -28,36 +28,38 @@ const learnSpell = async (req, res) => {
     const existingSpell = await prisma.characterSpell.findFirst({
       where: {
         characterId: characterId,
-        spellId: spellId
-      }
+        spellId: spellId,
+      },
     });
 
     if (existingSpell) {
-      return res.status(400).json({ error: 'Character already knows this spell' });
+      return res
+        .status(400)
+        .json({ error: "Character already knows this spell" });
     }
 
     // Verify character and spell exist before creating relationship
     const [character, spell] = await Promise.all([
       prisma.character.findUnique({ where: { id: characterId } }),
-      prisma.spell.findUnique({ where: { id: spellId } })
+      prisma.spell.findUnique({ where: { id: spellId } }),
     ]);
 
     if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+      return res.status(404).json({ error: "Character not found" });
     }
     if (!spell) {
-      return res.status(404).json({ error: 'Spell not found' });
+      return res.status(404).json({ error: "Spell not found" });
     }
 
     const characterSpell = await prisma.characterSpell.create({
       data: {
         characterId: characterId,
-        spellId: spellId
+        spellId: spellId,
       },
       include: {
         spell: true,
-        character: true
-      }
+        character: true,
+      },
     });
 
     res.status(201).json(characterSpell);
@@ -73,21 +75,23 @@ const forgetSpell = async (req, res) => {
     const characterSpell = await prisma.characterSpell.findFirst({
       where: {
         characterId: characterId,
-        spellId: spellId
-      }
+        spellId: spellId,
+      },
     });
 
     if (!characterSpell) {
-      return res.status(404).json({ error: 'Character has not learned this spell' });
+      return res
+        .status(404)
+        .json({ error: "Character has not learned this spell" });
     }
 
     await prisma.characterSpell.delete({
       where: {
-        id: characterSpell.id
-      }
+        id: characterSpell.id,
+      },
     });
 
-    res.status(200).json({ message: 'Spell forgotten successfully' });
+    res.status(200).json({ message: "Spell forgotten successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -96,20 +100,20 @@ const forgetSpell = async (req, res) => {
 const getSpellsByCharacter = async (req, res) => {
   try {
     const { characterId } = req.params;
-    
+
     const character = await prisma.character.findUnique({
       where: { id: characterId },
       include: {
         learnedSpells: {
           include: {
-            spell: true
-          }
-        }
-      }
+            spell: true,
+          },
+        },
+      },
     });
 
     if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+      return res.status(404).json({ error: "Character not found" });
     }
 
     res.status(200).json(character.learnedSpells);
@@ -118,9 +122,4 @@ const getSpellsByCharacter = async (req, res) => {
   }
 };
 
-export {
-  getCharacterSpells,
-  learnSpell,
-  forgetSpell,
-  getSpellsByCharacter
-};
+export { getCharacterSpells, learnSpell, forgetSpell, getSpellsByCharacter };

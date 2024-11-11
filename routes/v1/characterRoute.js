@@ -352,7 +352,7 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: Character not found
- * 
+ *
  *   put:
  *     summary: Update character by ID
  *     tags: [Characters]

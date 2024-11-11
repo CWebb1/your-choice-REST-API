@@ -404,9 +404,9 @@ describe("CRUD Operations", () => {
         .request(app)
         .delete(`/api/v1/characters/${testCharacterId}`)
         .end((req, res) => {
-        chai.expect(res.status).to.be.equal(200);
-        done();
-      });
+          chai.expect(res.status).to.be.equal(200);
+          done();
+        });
     });
 
     it("should delete a race by id", (done) => {
@@ -452,84 +452,120 @@ describe("CRUD Operations", () => {
 
   describe("VALIDATION TESTS", () => {
     it("should fail to create a character without required fields", (done) => {
-      chai.request(app).post("/api/v1/characters").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/characters")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create a character with invalid ability scores", (done) => {
-      chai.request(app).post("/api/v1/characters").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/characters")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create a race without required fields", (done) => {
-      chai.request(app).post("/api/v1/races").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/races")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create a race with invalid size", (done) => {
-      chai.request(app).post("/api/v1/races").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/races")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create a class without required fields", (done) => {
-      chai.request(app).post("/api/v1/classes").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/classes")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create a class with invalid primary ability", (done) => {
-      chai.request(app).post("/api/v1/classes").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/classes")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create a spell without required fields", (done) => {
-      chai.request(app).post("/api/v1/spells").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/spells")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create a spell with invalid school", (done) => {
-      chai.request(app).post("/api/v1/spells").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/spells")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create a weapon without required fields", (done) => {
-      chai.request(app).post("/api/v1/weapons").send({}).end((req, res) => {
-        chai.expect(res.status).to.be.equal(400);
-        done();
-      });
+      chai
+        .request(app)
+        .post("/api/v1/weapons")
+        .send({})
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
     it("should fail to create weapon with invalid damage format", (done) => {
-        chai
-          .request(app)
-          .post("/api/v1/weapons")
-          .send({
-            name: `Test Weapon Invalid ${Date.now()}`,
-            desc: "Test weapon description",
-            type: "DAGGER",
-            damage: "invalid",  // Invalid damage format
-            twohanded: false,
-            versatile: false,
-            architype: "SIMPLE"
-          })
-          .end((req, res) => {
-            chai.expect(res.status).to.be.equal(400);
-            done();
+      chai
+        .request(app)
+        .post("/api/v1/weapons")
+        .send({
+          name: `Test Weapon Invalid ${Date.now()}`,
+          desc: "Test weapon description",
+          type: "DAGGER",
+          damage: "invalid", // Invalid damage format
+          twohanded: false,
+          versatile: false,
+          architype: "SIMPLE",
+        })
+        .end((req, res) => {
+          chai.expect(res.status).to.be.equal(400);
+          done();
         });
     });
   });

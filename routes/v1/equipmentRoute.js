@@ -1,11 +1,11 @@
 // routes/v1/equipmentRoute.js
-import express from 'express';
+import express from "express";
 import {
   getCharacterEquipment,
   createEquipment,
   updateEquipment,
-  deleteEquipment
-} from '../../controllers/v1/equipmentController.js';
+  deleteEquipment,
+} from "../../controllers/v1/equipmentController.js";
 const router = express.Router();
 
 /**
@@ -32,7 +32,7 @@ const router = express.Router();
  *       404:
  *         description: Equipment not found
  */
-router.get('/characters/:characterId/equipment', getCharacterEquipment);
+router.get("/characters/:characterId/equipment", getCharacterEquipment);
 
 /**
  * @swagger
@@ -70,7 +70,7 @@ router.get('/characters/:characterId/equipment', getCharacterEquipment);
  *       400:
  *         description: Invalid request data
  */
-router.post('/characters/:characterId/equipment', createEquipment);
+router.post("/characters/:characterId/equipment", createEquipment);
 
 /**
  * @swagger
@@ -102,7 +102,7 @@ router.post('/characters/:characterId/equipment', createEquipment);
  *       404:
  *         description: Equipment not found
  */
-router.put('/characters/:characterId/equipment', updateEquipment);
+router.put("/characters/:characterId/equipment", updateEquipment);
 
 /**
  * @swagger
@@ -124,6 +124,6 @@ router.put('/characters/:characterId/equipment', updateEquipment);
  *       404:
  *         description: Equipment not found
  */
-router.delete('/characters/:characterId/equipment', deleteEquipment);
+router.delete("/characters/:characterId/equipment", deleteEquipment);
 
 export default router;

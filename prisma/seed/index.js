@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
@@ -24,8 +24,8 @@ async function main() {
         playable: true,
         speed: 30,
         darkvision: false,
-        size: "MEDIUM"
-      }
+        size: "MEDIUM",
+      },
     }),
     prisma.race.create({
       data: {
@@ -34,8 +34,8 @@ async function main() {
         playable: true,
         speed: 30,
         darkvision: true,
-        size: "MEDIUM"
-      }
+        size: "MEDIUM",
+      },
     }),
     // Add more races as needed
   ]);
@@ -54,11 +54,11 @@ async function main() {
           create: [
             {
               name: "Champion",
-              desc: "A master of martial combat and physical improvement."
-            }
-          ]
-        }
-      }
+              desc: "A master of martial combat and physical improvement.",
+            },
+          ],
+        },
+      },
     }),
     prisma.class.create({
       data: {
@@ -72,11 +72,11 @@ async function main() {
           create: [
             {
               name: "School of Evocation",
-              desc: "A specialist in spells that create powerful elemental effects."
-            }
-          ]
-        }
-      }
+              desc: "A specialist in spells that create powerful elemental effects.",
+            },
+          ],
+        },
+      },
     }),
     // Add more classes as needed
   ]);
@@ -93,8 +93,8 @@ async function main() {
         range: "150 feet",
         components: ["V", "S", "M"],
         duration: "Instantaneous",
-        concentration: false
-      }
+        concentration: false,
+      },
     }),
     // Add more spells as needed
   ]);
@@ -109,13 +109,13 @@ async function main() {
         damage: "1d8",
         twohanded: false,
         versatile: true,
-        architype: "MARTIAL"
-      }
+        architype: "MARTIAL",
+      },
     }),
     // Add more weapons as needed
   ]);
 
-  console.log('Seed data created successfully');
+  console.log("Seed data created successfully");
 }
 
 main()

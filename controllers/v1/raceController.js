@@ -11,7 +11,9 @@ const raceSchema = joi.object({
   playable: joi.boolean(),
   speed: joi.number().integer().min(0).max(100),
   darkvision: joi.boolean(),
-  size: joi.string().valid('TINY', 'SMALL', 'MEDIUM', 'LARGE', 'HUGE', 'GARGANTUAN')
+  size: joi
+    .string()
+    .valid("TINY", "SMALL", "MEDIUM", "LARGE", "HUGE", "GARGANTUAN"),
 });
 
 const getAllRaces = async (req, res) => {
@@ -24,7 +26,7 @@ const getAllRaces = async (req, res) => {
           characters: true,
         },
       }),
-      prisma.race.count({ where: query.where })
+      prisma.race.count({ where: query.where }),
     ]);
 
     res.status(200).json({
@@ -33,8 +35,8 @@ const getAllRaces = async (req, res) => {
         total,
         page: parseInt(req.query.page) || 1,
         limit: parseInt(req.query.limit) || 25,
-        totalPages: Math.ceil(total / (parseInt(req.query.limit) || 25))
-      }
+        totalPages: Math.ceil(total / (parseInt(req.query.limit) || 25)),
+      },
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -51,7 +53,7 @@ const getRaceById = async (req, res) => {
     });
 
     if (!race) {
-      return res.status(404).json({ message: 'Race not found' });
+      return res.status(404).json({ message: "Race not found" });
     }
 
     res.status(200).json(race);
@@ -69,7 +71,7 @@ const createRace = async (req, res) => {
     }
 
     const race = await prisma.race.create({
-      data: req.body
+      data: req.body,
     });
 
     res.status(201).json(race);
@@ -96,8 +98,8 @@ const updateRace = async (req, res) => {
 
     res.status(200).json(race);
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Race not found' });
+    if (error.code === "P2025") {
+      return res.status(404).json({ message: "Race not found" });
     }
     res.status(400).json({ error: error.message });
   }
@@ -109,10 +111,10 @@ const deleteRace = async (req, res) => {
       where: { id: req.params.id },
     });
 
-    res.status(200).json({ message: 'Race deleted successfully' });
+    res.status(200).json({ message: "Race deleted successfully" });
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Race not found' });
+    if (error.code === "P2025") {
+      return res.status(404).json({ message: "Race not found" });
     }
     res.status(400).json({ error: error.message });
   }

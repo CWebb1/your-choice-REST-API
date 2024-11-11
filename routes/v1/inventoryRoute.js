@@ -1,13 +1,13 @@
 // routes/v1/inventoryRoute.js
-import express from 'express';
+import express from "express";
 import {
   getCharacterInventory,
   createInventory,
   updateInventory,
   deleteInventory,
   addItemToInventory,
-  removeItemFromInventory
-} from '../../controllers/v1/inventoryController.js';
+  removeItemFromInventory,
+} from "../../controllers/v1/inventoryController.js";
 
 const router = express.Router();
 
@@ -34,7 +34,7 @@ const router = express.Router();
  *       404:
  *         description: Inventory not found
  */
-router.get('/characters/:characterId/inventory', getCharacterInventory);
+router.get("/characters/:characterId/inventory", getCharacterInventory);
 
 /**
  * @swagger
@@ -73,7 +73,7 @@ router.get('/characters/:characterId/inventory', getCharacterInventory);
  *       400:
  *         description: Invalid request data
  */
-router.post('/characters/:characterId/inventory', createInventory);
+router.post("/characters/:characterId/inventory", createInventory);
 
 /**
  * @swagger
@@ -100,7 +100,7 @@ router.post('/characters/:characterId/inventory', createInventory);
  *       404:
  *         description: Inventory not found
  */
-router.put('/characters/:characterId/inventory', updateInventory);
+router.put("/characters/:characterId/inventory", updateInventory);
 
 /**
  * @swagger
@@ -121,7 +121,7 @@ router.put('/characters/:characterId/inventory', updateInventory);
  *       404:
  *         description: Inventory not found
  */
-router.delete('/characters/:characterId/inventory', deleteInventory);
+router.delete("/characters/:characterId/inventory", deleteInventory);
 
 /**
  * @swagger
@@ -150,8 +150,7 @@ router.delete('/characters/:characterId/inventory', deleteInventory);
  *       400:
  *         description: Invalid request data or inventory full
  */
-router.post('/characters/:characterId/inventory/items', addItemToInventory);
-
+router.post("/characters/:characterId/inventory/items", addItemToInventory);
 
 /**
  * @swagger
@@ -178,6 +177,9 @@ router.post('/characters/:characterId/inventory/items', addItemToInventory);
  *       404:
  *         description: Character inventory or item not found
  */
-router.delete('/characters/:characterId/inventory/items/:itemId', removeItemFromInventory);
+router.delete(
+  "/characters/:characterId/inventory/items/:itemId",
+  removeItemFromInventory,
+);
 
 export default router;

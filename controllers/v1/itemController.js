@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -27,7 +27,7 @@ const getItemById = async (req, res) => {
     });
 
     if (!item) {
-      return res.status(404).json({ message: 'Item not found' });
+      return res.status(404).json({ message: "Item not found" });
     }
 
     res.status(200).json(item);
@@ -42,7 +42,7 @@ const createItem = async (req, res) => {
 
     // Validate quantity
     if (quantity && quantity < 1) {
-      return res.status(400).json({ error: 'Quantity must be at least 1' });
+      return res.status(400).json({ error: "Quantity must be at least 1" });
     }
 
     const item = await prisma.item.create({
@@ -52,21 +52,21 @@ const createItem = async (req, res) => {
         quantity,
         inventory: {
           connect: {
-            id: inventoryId
-          }
-        }
+            id: inventoryId,
+          },
+        },
       },
       include: {
         inventory: true,
-        equipmentSlot: true
-      }
+        equipmentSlot: true,
+      },
     });
 
     res.status(201).json(item);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2003') {
-        return res.status(400).json({ error: 'Invalid inventory ID provided' });
+      if (error.code === "P2003") {
+        return res.status(400).json({ error: "Invalid inventory ID provided" });
       }
     }
     res.status(400).json({ error: error.message });
@@ -79,7 +79,7 @@ const updateItem = async (req, res) => {
 
     // Validate quantity if provided
     if (quantity && quantity < 1) {
-      return res.status(400).json({ error: 'Quantity must be at least 1' });
+      return res.status(400).json({ error: "Quantity must be at least 1" });
     }
 
     const item = await prisma.item.update({
@@ -98,8 +98,8 @@ const updateItem = async (req, res) => {
     res.status(200).json(item);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2025') {
-        return res.status(404).json({ message: 'Item not found' });
+      if (error.code === "P2025") {
+        return res.status(404).json({ message: "Item not found" });
       }
     }
     res.status(400).json({ error: error.message });
@@ -112,21 +112,15 @@ const deleteItem = async (req, res) => {
       where: { id: req.params.id },
     });
 
-    res.status(200).json({ message: 'Item deleted successfully' });
+    res.status(200).json({ message: "Item deleted successfully" });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2025') {
-        return res.status(404).json({ message: 'Item not found' });
+      if (error.code === "P2025") {
+        return res.status(404).json({ message: "Item not found" });
       }
     }
     res.status(400).json({ error: error.message });
   }
 };
 
-export {
-  createItem,
-  getAllItems,
-  getItemById,
-  updateItem,
-  deleteItem
-};
+export { createItem, getAllItems, getItemById, updateItem, deleteItem };

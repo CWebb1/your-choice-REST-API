@@ -1,5 +1,5 @@
 // controllers/v1/equipmentController.js
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // Get equipment for a character
@@ -9,12 +9,14 @@ export const getCharacterEquipment = async (req, res) => {
       where: { characterId: req.params.characterId },
       include: {
         weapon: true,
-        armor: true
-      }
+        armor: true,
+      },
     });
 
     if (!equipment) {
-      return res.status(404).json({ message: 'Equipment not found for this character' });
+      return res
+        .status(404)
+        .json({ message: "Equipment not found for this character" });
     }
 
     res.json(equipment);
@@ -30,23 +32,25 @@ export const createEquipment = async (req, res) => {
 
     // Check if equipment already exists for this character
     const existingEquipment = await prisma.equipment.findUnique({
-      where: { characterId }
+      where: { characterId },
     });
 
     if (existingEquipment) {
-      return res.status(400).json({ message: 'Equipment already exists for this character' });
+      return res
+        .status(400)
+        .json({ message: "Equipment already exists for this character" });
     }
 
     const equipment = await prisma.equipment.create({
       data: {
         characterId,
         equipedWeapon,
-        armor: armorId ? { connect: { id: armorId } } : undefined
+        armor: armorId ? { connect: { id: armorId } } : undefined,
       },
       include: {
         weapon: true,
-        armor: true
-      }
+        armor: true,
+      },
     });
 
     res.status(201).json(equipment);
@@ -64,18 +68,20 @@ export const updateEquipment = async (req, res) => {
       where: { characterId: req.params.characterId },
       data: {
         equipedWeapon,
-        armor: armorId ? { connect: { id: armorId } } : { disconnect: true }
+        armor: armorId ? { connect: { id: armorId } } : { disconnect: true },
       },
       include: {
         weapon: true,
-        armor: true
-      }
+        armor: true,
+      },
     });
 
     res.json(equipment);
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Equipment not found for this character' });
+    if (error.code === "P2025") {
+      return res
+        .status(404)
+        .json({ message: "Equipment not found for this character" });
     }
     res.status(500).json({ message: error.message });
   }
@@ -85,13 +91,15 @@ export const updateEquipment = async (req, res) => {
 export const deleteEquipment = async (req, res) => {
   try {
     await prisma.equipment.delete({
-      where: { characterId: req.params.characterId }
+      where: { characterId: req.params.characterId },
     });
 
-    res.json({ message: 'Equipment deleted successfully' });
+    res.json({ message: "Equipment deleted successfully" });
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Equipment not found for this character' });
+    if (error.code === "P2025") {
+      return res
+        .status(404)
+        .json({ message: "Equipment not found for this character" });
     }
     res.status(500).json({ message: error.message });
   }

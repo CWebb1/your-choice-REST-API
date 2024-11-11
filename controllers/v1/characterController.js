@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -29,23 +29,23 @@ const getCharacterById = async (req, res) => {
         subclass: true,
         inventory: {
           include: {
-            items: true
+            items: true,
           },
         },
         equipment: {
           include: {
             slots: {
               include: {
-                item: true
-              }
-            }
+                item: true,
+              },
+            },
           },
         },
       },
     });
 
     if (!character) {
-      return res.status(404).json({ message: 'Character not found' });
+      return res.status(404).json({ message: "Character not found" });
     }
 
     res.status(200).json(character);
@@ -57,12 +57,21 @@ const getCharacterById = async (req, res) => {
 const createCharacter = async (req, res) => {
   try {
     const { name, raceId, classId, subclassId, ...stats } = req.body;
-    
+
     // Validate ability scores
-    const abilityScores = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+    const abilityScores = [
+      "strength",
+      "dexterity",
+      "constitution",
+      "intelligence",
+      "wisdom",
+      "charisma",
+    ];
     for (const score of abilityScores) {
       if (stats[score] && (stats[score] < 1 || stats[score] > 20)) {
-        return res.status(400).json({ error: `${score} must be between 1 and 20` });
+        return res
+          .status(400)
+          .json({ error: `${score} must be between 1 and 20` });
       }
     }
 
@@ -76,33 +85,35 @@ const createCharacter = async (req, res) => {
         inventory: {
           create: {
             gold: 0,
-            capacity: 20
-          }
+            capacity: 20,
+          },
         },
         equipment: {
           create: {
             slots: {
-              create: []
-            }
-          }
-        }
+              create: [],
+            },
+          },
+        },
       },
       include: {
         race: true,
         class: true,
         subclass: true,
         inventory: true,
-        equipment: true
-      }
+        equipment: true,
+      },
     });
 
     res.status(201).json(character);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2002') {
-        return res.status(400).json({ error: 'Character with this name already exists' });
-      } else if (error.code === 'P2003') {
-        return res.status(400).json({ error: 'Invalid reference ID provided' });
+      if (error.code === "P2002") {
+        return res
+          .status(400)
+          .json({ error: "Character with this name already exists" });
+      } else if (error.code === "P2003") {
+        return res.status(400).json({ error: "Invalid reference ID provided" });
       }
     }
     res.status(400).json({ error: error.message });
@@ -114,10 +125,19 @@ const updateCharacter = async (req, res) => {
     const { name, level, experience, ...stats } = req.body;
 
     // Validate ability scores
-    const abilityScores = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+    const abilityScores = [
+      "strength",
+      "dexterity",
+      "constitution",
+      "intelligence",
+      "wisdom",
+      "charisma",
+    ];
     for (const score of abilityScores) {
       if (stats[score] && (stats[score] < 1 || stats[score] > 20)) {
-        return res.status(400).json({ error: `${score} must be between 1 and 20` });
+        return res
+          .status(400)
+          .json({ error: `${score} must be between 1 and 20` });
       }
     }
 
@@ -149,9 +169,19 @@ const deleteCharacter = async (req, res) => {
       where: { id: req.params.id },
     });
 
-    res.status(200).json({ message: 'Character and all associated data deleted successfully' });
+    res
+      .status(200)
+      .json({
+        message: "Character and all associated data deleted successfully",
+      });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
-export {createCharacter, getAllCharacters, getCharacterById, deleteCharacter, updateCharacter};
+export {
+  createCharacter,
+  getAllCharacters,
+  getCharacterById,
+  deleteCharacter,
+  updateCharacter,
+};

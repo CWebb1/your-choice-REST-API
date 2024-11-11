@@ -1,7 +1,7 @@
 import express from "express";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import cors from 'cors';
+import cors from "cors";
 
 //importing Routes
 import characterRoute from "./routes/v1/characterRoute.js";
@@ -34,13 +34,13 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`,  // Add local development server
-        description: "Development Server"
+        url: `http://localhost:${PORT}`, // Add local development server
+        description: "Development Server",
       },
       {
         url: "https://your-choice-rest-api.onrender.com",
-        description: "Production Server"
-      }
+        description: "Production Server",
+      },
     ],
   },
   apis: ["./src/routes/v1/*.js", "./routes/v1/*.js"], // Add both potential paths
@@ -53,8 +53,8 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK' });
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "OK" });
 });
 
 // Routes
@@ -68,13 +68,12 @@ app.use("/api/v1/learnedspells", learnedspellRoute);
 app.use("/api/v1/weapons", weaponRoute);
 app.use("/api/v1/items", itemRoute);
 
-
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({
     status: 404,
-    message: 'The requested resource was not found',
-    path: req.path
+    message: "The requested resource was not found",
+    path: req.path,
   });
 });
 
@@ -83,14 +82,14 @@ app.use((err, req, res, next) => {
   const status = err.status || 500;
   res.status(status).json({
     status,
-    message: err.message || 'Internal Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    message: err.message || "Internal Server Error",
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   });
 });
 
 app.listen(PORT, () => {
   console.log(
-    `Server is listening on port ${PORT}. Visit http://localhost:${PORT}/api-docs for documentation`
+    `Server is listening on port ${PORT}. Visit http://localhost:${PORT}/api-docs for documentation`,
   );
 });
 

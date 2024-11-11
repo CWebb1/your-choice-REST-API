@@ -4,7 +4,7 @@ import {
   getSpellById,
   createSpell,
   updateSpell,
-  deleteSpell
+  deleteSpell,
 } from "../../controllers/v1/spellController.js";
 
 const router = express.Router();

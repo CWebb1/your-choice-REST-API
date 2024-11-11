@@ -3,7 +3,7 @@ import {
   getCharacterSpells,
   learnSpell,
   forgetSpell,
-  getSpellsByCharacter
+  getSpellsByCharacter,
 } from "../../controllers/v1/learnedspellController.js";
 
 const router = express.Router();

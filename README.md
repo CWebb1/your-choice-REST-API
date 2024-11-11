@@ -1,8 +1,10 @@
 # Project and Practical
 
 ## REST APIs URL (Render Web Service)
+
 You can access the deployed REST APIs on Render using the following URL:
-- [Your choice REST API](<https://your-choice-rest-api.onrender.com>)
+
+- [Your choice REST API](https://your-choice-rest-api.onrender.com)
 - [OpenTDB REST API](<REPLACE WITH A LINK TO YOUR REST API>)
 
 ## Setup Environment
@@ -19,7 +21,7 @@ cd <REPLACE WITH YOUR GITHUB REPO NAME>
 2. Install the required dependencies:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm install
 ```
 
 3. Set up environment variables by creating a `.env` file and filling in the required configurations:
@@ -35,7 +37,7 @@ JWT_LIFETIME="1h"
 To run the REST APIs on your local machine, run the following command:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm run dev
 ```
 
 Your local API should now be running on <http://localhost:3000>.
@@ -45,7 +47,7 @@ Your local API should now be running on <http://localhost:3000>.
 To create and apply a new migration using **Prisma**, run the following command:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm run prisma:migrate
 ```
 
 ## Reset PostgreSQL Database
@@ -53,7 +55,7 @@ To create and apply a new migration using **Prisma**, run the following command:
 To reset the **PostgreSQL** database, run the following command:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm run prisma:reset
 ```
 
 ## Seeding the Database with Prisma
@@ -65,7 +67,7 @@ To seed your database with additional data using **Prisma**, follow these steps:
 2. Run the following command to execute the seeding script:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm run prisma:seed
 ```
 
 The seeding script will populate your database with the necessary data.
@@ -77,7 +79,7 @@ Ensure that your development server is running (or use a test database).
 To run the **API tests** locally, run the following command:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm run mocha:test
 ```
 
 This will execute all the **API tests** to ensure the endpoints are working as expected.
@@ -87,7 +89,7 @@ This will execute all the **API tests** to ensure the endpoints are working as e
 To visually inspect your database using **Prisma Studio**, run the following command:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm run prisma:studio
 ```
 
 ## Code Quality Checks
@@ -95,7 +97,7 @@ To visually inspect your database using **Prisma Studio**, run the following com
 To check your code for any issues, run the following command:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm run lint
 ```
 
 ## Code Formatting
@@ -103,7 +105,7 @@ To check your code for any issues, run the following command:
 To format your code according to project guidelines, run the following command:
 
 ```bash
-<ADD THE COMMAND HERE>
+npm run format
 ```
 
 ## Entity Relationship Diagram (ERD)
@@ -111,5 +113,5 @@ To format your code according to project guidelines, run the following command:
 Below are the Entity Relationship Diagrams (ERDs) for the REST APIs:
 
 ```bash
-<ADD THE DIAGRAMS HERE>
+![ERD](prisma-erd.svg)
 ```

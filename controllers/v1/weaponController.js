@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -14,11 +14,11 @@ const getAllWeapons = async (req, res) => {
 const getWeaponById = async (req, res) => {
   try {
     const weapon = await prisma.weapon.findUnique({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
 
     if (!weapon) {
-      return res.status(404).json({ message: 'Weapon not found' });
+      return res.status(404).json({ message: "Weapon not found" });
     }
 
     res.status(200).json(weapon);
@@ -29,24 +29,33 @@ const getWeaponById = async (req, res) => {
 
 const createWeapon = async (req, res) => {
   try {
-    const { name, desc, type, damage, twohanded, versatile, range, architype } = req.body;
+    const { name, desc, type, damage, twohanded, versatile, range, architype } =
+      req.body;
 
     // Validate damage dice format (e.g., "1d4", "2d6", "1d12")
     const dicePattern = /^\d+d\d+$/;
     if (!dicePattern.test(damage)) {
-      return res.status(400).json({ error: 'Invalid damage format. Use format like "1d6" or "2d8"' });
+      return res
+        .status(400)
+        .json({
+          error: 'Invalid damage format. Use format like "1d6" or "2d8"',
+        });
     }
 
     // Validate range if provided
     if (range !== undefined && range !== null) {
       if (range <= 0) {
-        return res.status(400).json({ error: 'Range must be a positive number' });
+        return res
+          .status(400)
+          .json({ error: "Range must be a positive number" });
       }
     }
 
     // Validate weapon type logic
-    if (type === 'RANGED' && range === null) {
-      return res.status(400).json({ error: 'Ranged weapons must have a range value' });
+    if (type === "RANGED" && range === null) {
+      return res
+        .status(400)
+        .json({ error: "Ranged weapons must have a range value" });
     }
 
     const weapon = await prisma.weapon.create({
@@ -58,15 +67,17 @@ const createWeapon = async (req, res) => {
         twohanded,
         versatile,
         range,
-        architype
-      }
+        architype,
+      },
     });
 
     res.status(201).json(weapon);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2002') {
-        return res.status(400).json({ error: 'Weapon with this name already exists' });
+      if (error.code === "P2002") {
+        return res
+          .status(400)
+          .json({ error: "Weapon with this name already exists" });
       }
     }
     res.status(400).json({ error: error.message });
@@ -75,26 +86,35 @@ const createWeapon = async (req, res) => {
 
 const updateWeapon = async (req, res) => {
   try {
-    const { name, desc, type, damage, twohanded, versatile, range, architype } = req.body;
+    const { name, desc, type, damage, twohanded, versatile, range, architype } =
+      req.body;
 
     // Validate damage dice format if provided
     if (damage) {
       const dicePattern = /^\d+d\d+$/;
       if (!dicePattern.test(damage)) {
-        return res.status(400).json({ error: 'Invalid damage format. Use format like "1d6" or "2d8"' });
+        return res
+          .status(400)
+          .json({
+            error: 'Invalid damage format. Use format like "1d6" or "2d8"',
+          });
       }
     }
 
     // Validate range if provided
     if (range !== undefined && range !== null) {
       if (range <= 0) {
-        return res.status(400).json({ error: 'Range must be a positive number' });
+        return res
+          .status(400)
+          .json({ error: "Range must be a positive number" });
       }
     }
 
     // Validate weapon type logic
-    if (type === 'RANGED' && range === null) {
-      return res.status(400).json({ error: 'Ranged weapons must have a range value' });
+    if (type === "RANGED" && range === null) {
+      return res
+        .status(400)
+        .json({ error: "Ranged weapons must have a range value" });
     }
 
     const weapon = await prisma.weapon.update({
@@ -107,15 +127,15 @@ const updateWeapon = async (req, res) => {
         twohanded,
         versatile,
         range,
-        architype
-      }
+        architype,
+      },
     });
 
     res.status(200).json(weapon);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2025') {
-        return res.status(404).json({ error: 'Weapon not found' });
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "Weapon not found" });
       }
     }
     res.status(400).json({ error: error.message });
@@ -125,14 +145,14 @@ const updateWeapon = async (req, res) => {
 const deleteWeapon = async (req, res) => {
   try {
     await prisma.weapon.delete({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
 
-    res.status(200).json({ message: 'Weapon deleted successfully' });
+    res.status(200).json({ message: "Weapon deleted successfully" });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2025') {
-        return res.status(404).json({ error: 'Weapon not found' });
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "Weapon not found" });
       }
     }
     res.status(400).json({ error: error.message });
@@ -144,5 +164,5 @@ export {
   getWeaponById,
   createWeapon,
   updateWeapon,
-  deleteWeapon
+  deleteWeapon,
 };

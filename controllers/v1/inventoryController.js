@@ -1,5 +1,5 @@
 // controllers/v1/inventoryController.js
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // Get inventory for a character
@@ -9,12 +9,14 @@ export const getCharacterInventory = async (req, res) => {
       where: { characterId: req.params.characterId },
       include: {
         items: true,
-        weapon: true
-      }
+        weapon: true,
+      },
     });
 
     if (!inventory) {
-      return res.status(404).json({ message: 'Inventory not found for this character' });
+      return res
+        .status(404)
+        .json({ message: "Inventory not found for this character" });
     }
 
     res.json(inventory);
@@ -30,11 +32,13 @@ export const createInventory = async (req, res) => {
 
     // Check if inventory already exists for this character
     const existingInventory = await prisma.inventory.findUnique({
-      where: { characterId }
+      where: { characterId },
     });
 
     if (existingInventory) {
-      return res.status(400).json({ message: 'Inventory already exists for this character' });
+      return res
+        .status(400)
+        .json({ message: "Inventory already exists for this character" });
     }
 
     const inventory = await prisma.inventory.create({
@@ -43,13 +47,13 @@ export const createInventory = async (req, res) => {
         gold,
         weaponlist,
         items: {
-          connect: itemIds ? itemIds.map(id => ({ id })) : []
-        }
+          connect: itemIds ? itemIds.map((id) => ({ id })) : [],
+        },
       },
       include: {
         items: true,
-        weapon: true
-      }
+        weapon: true,
+      },
     });
 
     res.status(201).json(inventory);
@@ -69,19 +73,21 @@ export const updateInventory = async (req, res) => {
         gold,
         weaponlist,
         items: {
-          set: itemIds ? itemIds.map(id => ({ id })) : []
-        }
+          set: itemIds ? itemIds.map((id) => ({ id })) : [],
+        },
       },
       include: {
         items: true,
-        weapon: true
-      }
+        weapon: true,
+      },
     });
 
     res.json(inventory);
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Inventory not found for this character' });
+    if (error.code === "P2025") {
+      return res
+        .status(404)
+        .json({ message: "Inventory not found for this character" });
     }
     res.status(500).json({ message: error.message });
   }
@@ -91,13 +97,15 @@ export const updateInventory = async (req, res) => {
 export const deleteInventory = async (req, res) => {
   try {
     await prisma.inventory.delete({
-      where: { characterId: req.params.characterId }
+      where: { characterId: req.params.characterId },
     });
 
-    res.json({ message: 'Inventory deleted successfully' });
+    res.json({ message: "Inventory deleted successfully" });
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Inventory not found for this character' });
+    if (error.code === "P2025") {
+      return res
+        .status(404)
+        .json({ message: "Inventory not found for this character" });
     }
     res.status(500).json({ message: error.message });
   }
@@ -112,19 +120,21 @@ export const addItemToInventory = async (req, res) => {
       where: { characterId: req.params.characterId },
       data: {
         items: {
-          connect: { id: itemId }
-        }
+          connect: { id: itemId },
+        },
       },
       include: {
         items: true,
-        weapon: true
-      }
+        weapon: true,
+      },
     });
 
     res.json(inventory);
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Inventory not found for this character' });
+    if (error.code === "P2025") {
+      return res
+        .status(404)
+        .json({ message: "Inventory not found for this character" });
     }
     res.status(500).json({ message: error.message });
   }
@@ -139,19 +149,19 @@ export const removeItemFromInventory = async (req, res) => {
       where: { characterId: req.params.characterId },
       data: {
         items: {
-          disconnect: { id: itemId }
-        }
+          disconnect: { id: itemId },
+        },
       },
       include: {
         items: true,
-        weapon: true
-      }
+        weapon: true,
+      },
     });
 
     res.json(inventory);
   } catch (error) {
-    if (error.code === 'P2025') {
-      return res.status(404).json({ message: 'Inventory or item not found' });
+    if (error.code === "P2025") {
+      return res.status(404).json({ message: "Inventory or item not found" });
     }
     res.status(500).json({ message: error.message });
   }

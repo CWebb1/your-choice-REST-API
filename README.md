@@ -14,8 +14,8 @@ Follow these steps to set up the project after cloning the repository:
 1. Clone the repository:
 
 ```bash
-git clone <REPLACE WITH A LINK TO YOUR GITHUB REPO.git>
-cd <REPLACE WITH YOUR GITHUB REPO NAME>
+git clone https://github.com/CWebb1/your-choice-REST-API.git
+cd your-choice-REST-API
 ```
 
 2. Install the required dependencies:

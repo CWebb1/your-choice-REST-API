@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
     "prisma:migrate": "npx prisma migrate dev",
-    "prisma:reset": "npx prisma migrate reset --force"
+    "prisma:reset": "npx prisma migrate reset --force",
+    "prisma:studio": "npx prisma studio",
+    "format": "prettier --write .",
+    "lint": "eslint . --fix"
   },
   "type": "module",
   "keywords": [],

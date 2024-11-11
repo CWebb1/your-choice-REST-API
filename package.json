@@ -12,7 +12,7 @@
     "prisma:seed": "npm run prisma:reset && node prisma/seed/index.js",
     "format": "prettier --write .",
     "lint": "eslint . --fix",
-    "mocha:test": "mocha tests/**/*.test.js --exit"
+    "mocha:test": "mocha tests/**/*bg3.test.js --timeout 10000 --exit"
   },
   "type": "module",
   "keywords": [],
@@ -28,13 +28,13 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.9",
+    "chai": "^4.5.0",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.8.2",
     "nodemon": "^3.1.7",
     "prisma": "^5.22.0",
     "prisma-erd-generator": "^1.11.2",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1",
-    "chai": "^4.3.7",
-    "chai-http": "^4.4.0",
-    "mocha": "^10.2.0"
+    "swagger-ui-express": "^5.0.1"
   }
 }

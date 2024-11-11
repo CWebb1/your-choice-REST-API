@@ -29,14 +29,16 @@ const getCharacterById = async (req, res) => {
         subclass: true,
         inventory: {
           include: {
-            items: true,
-            weapon: true,
+            items: true
           },
         },
         equipment: {
           include: {
-            weapon: true,
-            armor: true,
+            slots: {
+              include: {
+                item: true
+              }
+            }
           },
         },
       },
@@ -110,6 +112,14 @@ const createCharacter = async (req, res) => {
 const updateCharacter = async (req, res) => {
   try {
     const { name, level, experience, ...stats } = req.body;
+
+    // Validate ability scores
+    const abilityScores = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+    for (const score of abilityScores) {
+      if (stats[score] && (stats[score] < 1 || stats[score] > 20)) {
+        return res.status(400).json({ error: `${score} must be between 1 and 20` });
+      }
+    }
 
     const character = await prisma.character.update({
       where: { id: req.params.id },

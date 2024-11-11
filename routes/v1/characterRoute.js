@@ -321,6 +321,121 @@ const router = express.Router();
  *                   type: string
  *                   example: Character not found
  */
+/**
+ * @swagger
+ * /api/v1/characters/{id}:
+ *   get:
+ *     summary: Get character by ID
+ *     tags: [Characters]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Character UUID
+ *     responses:
+ *       200:
+ *         description: Character details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Character'
+ *       404:
+ *         description: Character not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Character not found
+ * 
+ *   put:
+ *     summary: Update character by ID
+ *     tags: [Characters]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Character UUID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               level:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 20
+ *               experience:
+ *                 type: integer
+ *                 minimum: 0
+ *               subclassId:
+ *                 type: string
+ *                 format: uuid
+ *                 nullable: true
+ *               strength:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 20
+ *               dexterity:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 20
+ *               constitution:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 20
+ *               intelligence:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 20
+ *               wisdom:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 20
+ *               charisma:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 20
+ *     responses:
+ *       200:
+ *         description: Character updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Character'
+ *       400:
+ *         description: Invalid request data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid ability score value
+ *       404:
+ *         description: Character not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Character not found
+ */
 
 router.get("/", getAllCharacters);
 router.get("/:id", getCharacterById);

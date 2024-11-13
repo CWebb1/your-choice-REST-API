@@ -5,7 +5,7 @@
 You can access the deployed REST APIs on Render using the following URL:
 
 - [Your choice REST API](https://your-choice-rest-api.onrender.com)
-- [OpenTDB REST API](<REPLACE WITH A LINK TO YOUR REST API>)
+- [OpenTDB REST API](https://github.com/CWebb1/OpenTDBAPI)
 
 ## Setup Environment
 
